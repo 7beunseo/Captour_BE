@@ -1,9 +1,6 @@
 package com.mobileapp.Captour_BE.service;
 
-import com.mobileapp.Captour_BE.dto.CreateFollowDTO;
-import com.mobileapp.Captour_BE.dto.DeleteFollowDTO;
-import com.mobileapp.Captour_BE.dto.FollowDTO;
-import com.mobileapp.Captour_BE.dto.GetFollowDTO;
+import com.mobileapp.Captour_BE.dto.*;
 import com.mobileapp.Captour_BE.entity.Follow;
 import com.mobileapp.Captour_BE.repository.FollowRepository;
 import org.springframework.stereotype.Service;
@@ -20,7 +17,7 @@ public class FollowService {
     }
 
     // 팔로우 생성
-    public CreateFollowDTO createFollow(String follower, String following) {
+    public ResponseDTO<FollowDTO> createFollow(String follower, String following) {
         Follow follow = Follow.builder()
                 .follower(follower)
                 .following(following)
@@ -28,13 +25,22 @@ public class FollowService {
 
         followRepository.save(follow);
 
-        return CreateFollowDTO.builder()
+        FollowDTO dto = FollowDTO.builder()
+                .follower(follow.getFollower())
+                .following(follow.getFollowing())
+                .build();
+
+        List<FollowDTO> followDTOs = new ArrayList<>();
+        followDTOs.add(dto);
+
+        return ResponseDTO.<FollowDTO>builder()
                 .message("팔로우 생성 완료")
+                .data(followDTOs)
                 .build();
     }
 
     // 팔로우 조회
-    public GetFollowDTO<FollowDTO> readFollow(String follower) {
+    public ResponseDTO<FollowDTO> readFollow(String follower) {
         List<Follow> follow = followRepository.findAllByFollower(follower);
 
         List<FollowDTO> followDTOs = new ArrayList<>();
@@ -47,7 +53,7 @@ public class FollowService {
             followDTOs.add(dto);
         });
 
-        return GetFollowDTO.<FollowDTO>builder()
+        return ResponseDTO.<FollowDTO>builder()
                 .message("팔로우 조회 완료")
                 .data(followDTOs)
                 .build();
@@ -55,7 +61,7 @@ public class FollowService {
     }
 
     // 팔로우 삭제
-    public DeleteFollowDTO deleteFollow(String follower, String following) {
+    public ResponseDTO deleteFollow(String follower, String following) {
         return null;
     }
 }
