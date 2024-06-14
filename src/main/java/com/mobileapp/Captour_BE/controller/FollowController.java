@@ -5,10 +5,7 @@ import com.mobileapp.Captour_BE.dto.GetStatisticDTO;
 import com.mobileapp.Captour_BE.dto.ResponseDTO;
 import com.mobileapp.Captour_BE.service.FollowService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/captour")
@@ -20,13 +17,20 @@ public class FollowController {
         this.followService = followService;
     }
 
-    // 팔로우 관계 설정
+    // 팔로우 관계 설정 - GET
     @GetMapping("/create-follow")
     public ResponseEntity<ResponseDTO<FollowDTO>> createFollow(
             @RequestParam String follower,
             @RequestParam String following
     ) {
         ResponseDTO<FollowDTO> response = followService.createFollow(follower, following);
+        return ResponseEntity.ok().body(response);
+    }
+
+    // 팔로우 관계 설정 - POST
+    @PostMapping("/create-follow")
+    public ResponseEntity<ResponseDTO<FollowDTO>> createFollow(@RequestBody FollowDTO followDTO){
+        ResponseDTO<FollowDTO> response = followService.createFollow(followDTO.getFollower(), followDTO.getFollowing());
         return ResponseEntity.ok().body(response);
     }
 
@@ -54,7 +58,7 @@ public class FollowController {
         return ResponseEntity.ok().body(response);
     }
     // 팔로우 삭제
-    @GetMapping("/delete-follow")
+    @DeleteMapping("/delete-follow")
     public ResponseEntity<ResponseDTO<FollowDTO>> deleteFollow(
             @RequestParam String follower,
             @RequestParam String following
