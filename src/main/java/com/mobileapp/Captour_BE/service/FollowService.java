@@ -40,7 +40,7 @@ public class FollowService {
     }
 
     // 팔로우 조회
-    public ResponseDTO<FollowDTO> readFollow(String follower) {
+    public ResponseDTO<FollowDTO> readFollowing(String follower) {
         List<Follow> follow = followRepository.findAllByFollower(follower);
 
         List<FollowDTO> followDTOs = new ArrayList<>();
@@ -83,6 +83,24 @@ public class FollowService {
         return ResponseDTO.<FollowDTO>builder()
                 .message("true")
                 .data(null)
+                .build();
+    }
+
+    public ResponseDTO<FollowDTO> readFollower(String following) {
+        List<Follow> follow = followRepository.findByFollowing(following);
+        List<FollowDTO> followDTOs = new ArrayList<>();
+
+        follow.forEach(f -> {
+            FollowDTO dto = FollowDTO.builder()
+                    .follower(f.getFollower())
+                    .following(f.getFollowing())
+                    .build();
+            followDTOs.add(dto);
+        });
+
+        return ResponseDTO.<FollowDTO>builder()
+                .message("팔로우 조회 완료")
+                .data(followDTOs)
                 .build();
     }
 }

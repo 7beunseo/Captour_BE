@@ -30,9 +30,16 @@ public class FollowController {
     }
 
     // 팔로우 조회
-    @GetMapping("/read-follow")
-    public ResponseEntity<ResponseDTO<FollowDTO>> readFollow(@RequestParam String follower) {
-        ResponseDTO<FollowDTO> response = followService.readFollow(follower);
+    @GetMapping("/read-following")
+    public ResponseEntity<ResponseDTO<FollowDTO>> readFollowing(@RequestParam String follower) {
+        ResponseDTO<FollowDTO> response = followService.readFollowing(follower);
+        return ResponseEntity.ok().body(response);
+    }
+
+    // 팔로워 조회
+    @GetMapping("/read-follower")
+    public ResponseEntity<ResponseDTO<FollowDTO>> readFollower(@RequestParam String following) {
+        ResponseDTO<FollowDTO> response = followService.readFollower(following);
         return ResponseEntity.ok().body(response);
     }
 
