@@ -62,7 +62,13 @@ public class FollowService {
 
     // 팔로우 삭제
     public ResponseDTO<FollowDTO> deleteFollow(String follower, String following) {
-        return null;
+        List<Follow> follows = followRepository.findAllByFollowerAndFollowing(follower, following);
+        followRepository.deleteAll(follows);
+
+        return ResponseDTO.<FollowDTO>builder()
+                .message("팔로우 삭제 완료")
+                .data(null)
+                .build();
     }
 
     public ResponseDTO<FollowDTO> getFollowStatus(String follower, String following) {
