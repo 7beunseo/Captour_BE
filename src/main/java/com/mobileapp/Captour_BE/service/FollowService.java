@@ -5,6 +5,7 @@ import com.mobileapp.Captour_BE.entity.Follow;
 import com.mobileapp.Captour_BE.repository.FollowRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class FollowService {
         Follow follow = Follow.builder()
                 .follower(follower)
                 .following(following)
+                .createdDate(LocalDate.now())
                 .build();
 
         followRepository.save(follow);

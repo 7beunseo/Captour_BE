@@ -1,10 +1,12 @@
 package com.mobileapp.Captour_BE.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,4 +22,8 @@ public class Follow {
     private String follower; // 팔로우하는 이메일
 
     private String following; // 팔로잉하는 이메일
+
+    @CreatedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createdDate; // 생성일
 }
