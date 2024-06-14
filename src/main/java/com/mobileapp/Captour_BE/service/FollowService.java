@@ -6,6 +6,7 @@ import com.mobileapp.Captour_BE.repository.FollowRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +127,7 @@ public class FollowService {
         List<GetStatisticDTO> dtos = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             GetStatisticDTO dto = GetStatisticDTO.builder()
-                    .day(7 - i) // 7일 전부터 오늘까지의 날짜를 의미
+                    .day(7 - i) // 7일 전부터 오늘까지의 날짜
                     .followerNum(followerCounts[i])
                     .build();
             dtos.add(dto);
@@ -137,4 +138,39 @@ public class FollowService {
                 .data(dtos)
                 .build();
     }
+
+    public ResponseDTO<GetStatisticDTO> monthStatistics(String following) {
+        YearMonth currentMonth = YearMonth.now(); // 현재 달
+        YearMonth startMonth = YearMonth.of(currentMonth.getYear(), 1); // 1월
+
+        // 1월부터 현재 달까지의 팔로우 데이터를 조회
+        List<Follow> follows = followRepository.findAllByFollowingAndCreatedDateBetween(
+                following, startMonth.atDay(1), currentMonth.atEndOfMonth());
+
+        // 각 월별 팔로워 수 저장
+        int[] followerCounts = new int[12];
+
+        // 팔로우 데이터에서 각 월에 해당하는 팔로워 수 계산
+        for (Follow follow : follows) {
+            YearMonth followMonth = YearMonth.from(follow.getCreatedDate());
+            int monthIndex = followMonth.getMonthValue() - 1; // 1월은 index 0, 12월은 index 11
+            followerCounts[monthIndex]++;
+        }
+
+        List<GetStatisticDTO> dtos = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            int followerNum = (i < currentMonth.getMonthValue()) ? followerCounts[i] : 0; // 현재 달까지 실제 값, 나머지는 0
+            GetStatisticDTO dto = GetStatisticDTO.builder()
+                    .day(i + 1) // 월 숫자 (1부터 12까지)
+                    .followerNum(followerNum)
+                    .build();
+            dtos.add(dto);
+        }
+
+        return ResponseDTO.<GetStatisticDTO>builder()
+                .message("월간 통계 조회 완료")
+                .data(dtos)
+                .build();
+    }
+
 }

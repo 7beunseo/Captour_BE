@@ -69,4 +69,11 @@ public class FollowController {
         ResponseDTO<GetStatisticDTO> response = followService.weekStatistics(following);
         return ResponseEntity.ok().body(response);
     }
+
+    // 월간 팔로워 통계
+    @GetMapping("/month-statistics")
+    public ResponseEntity<ResponseDTO<GetStatisticDTO>> monthStatistics(@RequestParam String following) {
+        ResponseDTO<GetStatisticDTO> response = followService.monthStatistics(following);
+        return ResponseEntity.ok().body(response);
+    }
 }
