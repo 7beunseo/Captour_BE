@@ -1,6 +1,7 @@
 package com.mobileapp.Captour_BE.controller;
 
 import com.mobileapp.Captour_BE.dto.FollowDTO;
+import com.mobileapp.Captour_BE.dto.GetStatisticDTO;
 import com.mobileapp.Captour_BE.dto.ResponseDTO;
 import com.mobileapp.Captour_BE.service.FollowService;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,13 @@ public class FollowController {
             @RequestParam String following
     ) {
         ResponseDTO<FollowDTO> response = followService.deleteFollow(follower, following);
+        return ResponseEntity.ok().body(response);
+    }
+
+    // 한 주간 팔로워 통계
+    @GetMapping("/week-statistics")
+    public ResponseEntity<ResponseDTO<GetStatisticDTO>> weekStatistics(@RequestParam String following) {
+        ResponseDTO<GetStatisticDTO> response = followService.weekStatistics(following);
         return ResponseEntity.ok().body(response);
     }
 }

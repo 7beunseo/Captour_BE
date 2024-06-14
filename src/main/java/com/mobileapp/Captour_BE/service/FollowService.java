@@ -105,4 +105,36 @@ public class FollowService {
                 .data(followDTOs)
                 .build();
     }
+
+    public ResponseDTO<GetStatisticDTO> weekStatistics(String following) {
+        LocalDate endDate = LocalDate.now(); // 현재 날짜
+        LocalDate startDate = endDate.minusDays(6); // 6일 전
+
+        List<Follow> follows = followRepository.findAllByFollowingAndCreatedDateBetween(following, startDate, endDate);
+
+        // 각 날짜별 팔로워 수 저장
+        int[] followerCounts = new int[7];
+
+        // 팔로우 데이터에서 각 날짜에 해당하는 팔로워 수 계산
+        for (Follow follow : follows) {
+            int daysAgo = (int) (endDate.toEpochDay() - follow.getCreatedDate().toEpochDay());
+            if (daysAgo >= 0 && daysAgo < 7) {
+                followerCounts[daysAgo]++;
+            }
+        }
+
+        List<GetStatisticDTO> dtos = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            GetStatisticDTO dto = GetStatisticDTO.builder()
+                    .day(7 - i) // 7일 전부터 오늘까지의 날짜를 의미
+                    .followerNum(followerCounts[i])
+                    .build();
+            dtos.add(dto);
+        }
+
+        return ResponseDTO.<GetStatisticDTO>builder()
+                .message("주간 통계 조회 완료")
+                .data(dtos)
+                .build();
+    }
 }
