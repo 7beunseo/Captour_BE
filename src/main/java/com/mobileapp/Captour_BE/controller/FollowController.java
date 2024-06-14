@@ -36,6 +36,15 @@ public class FollowController {
         return ResponseEntity.ok().body(response);
     }
 
+    // 팔로우 상태인지 확인
+    @GetMapping("/get-follow-status")
+    public ResponseEntity<ResponseDTO<FollowDTO>> getFollowStatus(
+            @RequestParam String follower,
+            @RequestParam String following
+    ) {
+        ResponseDTO<FollowDTO> response = followService.getFollowStatus(follower, following);
+        return ResponseEntity.ok().body(response);
+    }
     // 팔로우 삭제
     @GetMapping("/delete-follow")
     public ResponseEntity<ResponseDTO<FollowDTO>> deleteFollow(

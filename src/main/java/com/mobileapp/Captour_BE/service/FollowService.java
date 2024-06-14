@@ -61,7 +61,22 @@ public class FollowService {
     }
 
     // 팔로우 삭제
-    public ResponseDTO deleteFollow(String follower, String following) {
+    public ResponseDTO<FollowDTO> deleteFollow(String follower, String following) {
         return null;
+    }
+
+    public ResponseDTO<FollowDTO> getFollowStatus(String follower, String following) {
+        List<Follow> follow = followRepository.findAllByFollowerAndFollowing(follower, following);
+
+        if(follow.isEmpty()) {
+            return ResponseDTO.<FollowDTO>builder()
+                    .message("false")
+                    .data(null)
+                    .build();
+        }
+        return ResponseDTO.<FollowDTO>builder()
+                .message("true")
+                .data(null)
+                .build();
     }
 }
