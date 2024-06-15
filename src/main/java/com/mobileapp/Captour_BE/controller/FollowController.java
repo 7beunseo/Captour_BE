@@ -80,4 +80,13 @@ public class FollowController {
         ResponseDTO<GetStatisticDTO> response = followService.monthStatistics(following);
         return ResponseEntity.ok().body(response);
     }
+
+    // 팔로우 상태인지 확인
+    @GetMapping("/test")
+    public ResponseEntity<ResponseDTO<String>> testController() {
+        ResponseDTO<String> response = ResponseDTO.<String>builder()
+                .message("test 성공")
+                .build();
+        return ResponseEntity.ok().body(response);
+    }
 }
